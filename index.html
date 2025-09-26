@@ -1,180 +1,251 @@
-# task<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Online Learning Books</title>
-  <style>
-    /* CSS styles */
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      background-color: #f9f9f9;
-      color: #333;
-    }
-    header {
-      background-color: #004aad;
-      color: white;
-      padding: 1.2rem 2rem;
-      text-align: center;
-      font-size: 1.8rem;
-      font-weight: bold;
-      letter-spacing: 1.5px;
-    }
-    main {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-    .search-bar {
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-    .search-bar input[type="text"] {
-      width: 80%;
-      max-width: 400px;
-      padding: 0.7rem 1rem;
-      font-size: 1rem;
-      border: 2px solid #004aad;
-      border-radius: 5px;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    .search-bar input[type="text"]:focus {
-      border-color: #0073e6;
-    }
-    .book-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1.5rem;
-    }
-    .book-card {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.2s;
-    }
-    .book-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 15px rgba(0,0,0,0.15);
-    }
-    .book-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: #004aad;
-    }
-    .book-author {
-      font-size: 1rem;
-      font-style: italic;
-      margin-bottom: 1rem;
-      color: #555;
-    }
-    .book-description {
-      flex-grow: 1;
-      font-size: 0.95rem;
-      line-height: 1.4;
-      color: #666;
-    }
-
-    @media (max-width: 500px) {
-      .search-bar input[type="text"] {
-        width: 95%;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookStream - Digital Library</title>
+    <!-- Load Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font: Roboto Slab (Bookish/Editorial Look) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Slab', serif; /* Dark Mode Font */
+            background-color: #111827; /* Dark background: Tailwind gray-900 */
+            color: #e5e7eb; /* Default light text color */
+        }
+        /* Dark Mode Color Palette: Warm Gold/Amber Accent */
+        .text-primary { color: #f59e0b; } /* Gold/Amber for high contrast */
+        .bg-primary { background-color: #d97706; } /* Base dark Amber for buttons */
+        .hover-primary:hover { background-color: #f59e0b; } /* Brighter hover state */
+        .card-bg { background-color: #1f2937; } /* Card background: Tailwind gray-800 */
+        .book-card-shadow { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2); } /* Darker shadow */
+    </style>
 </head>
 <body>
-  <header>Online Learning Platform - Books</header>
-  <main>
-    <div class="search-bar">
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Search books by title or author..."
-        onkeyup="filterBooks()"
-      />
-    </div>
-    <div class="book-grid" id="bookGrid">
-      <!-- Books render here -->
-    </div>
-  </main>
 
-  <script>
-    // JavaScript code
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 bg-gray-900 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="#" class="text-2xl font-bold text-primary">
+                    BookStream
+                </a>
 
-    const books = [
-      {
-        title: "Introduction to Algorithms",
-        author: "Thomas H. Cormen",
-        description: "A comprehensive textbook on algorithms and data structures, widely used in computer science education."
-      },
-      {
-        title: "Clean Code",
-        author: "Robert C. Martin",
-        description: "A handbook of agile software craftsmanship that emphasizes writing clean, readable, and maintainable code."
-      },
-      {
-        title: "Learning Python",
-        author: "Mark Lutz",
-        description: "An in-depth introduction to the core Python language and its libraries."
-      },
-      {
-        title: "Artificial Intelligence: A Modern Approach",
-        author: "Stuart Russell & Peter Norvig",
-        description: "The leading textbook on artificial intelligence, covering theory and practical applications."
-      },
-      {
-        title: "Effective Java",
-        author: "Joshua Bloch",
-        description: "Best practices and design patterns for writing efficient and maintainable Java code."
-      },
-      {
-        title: "The Pragmatic Programmer",
-        author: "Andrew Hunt and David Thomas",
-        description: "Tips and techniques for improving software development craftsmanship and career."
-      }
-    ];
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#books" class="text-gray-300 hover:text-primary transition duration-150">Genres</a>
+                    <a href="#" class="text-gray-300 hover:text-primary transition duration-150">Bestsellers</a>
+                    <a href="#" class="text-gray-300 hover:text-primary transition duration-150">New Releases</a>
+                </nav>
 
-    function renderBooks(bookList) {
-      const bookGrid = document.getElementById('bookGrid');
-      bookGrid.innerHTML = '';
+                <!-- Auth Buttons -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button class="text-gray-300 hover:text-primary font-medium transition duration-150">Sign In</button>
+                    <button class="bg-primary hover-primary text-white font-semibold py-2 px-4 rounded-lg shadow-lg transition duration-150">
+                        Start Reading
+                    </button>
+                </div>
 
-      if (bookList.length === 0) {
-        bookGrid.innerHTML = '<p>No books found.</p>';
-        return;
-      }
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-400 hover:text-primary hover:bg-gray-800 focus:outline-none transition duration-150">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
 
-      bookList.forEach(book => {
-        const card = document.createElement('div');
-        card.className = 'book-card';
-        card.innerHTML = `
-          <div class="book-title">${book.title}</div>
-          <div class="book-author">by ${book.author}</div>
-          <div class="book-description">${book.description}</div>
-        `;
-        bookGrid.appendChild(card);
-      });
-    }
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#books" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800">Genres</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800">Bestsellers</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800">New Releases</a>
+                <button class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800">Sign In</button>
+                <button class="w-full text-left bg-primary hover-primary text-white font-semibold py-2 px-3 rounded-lg mt-2">
+                    Start Reading
+                </button>
+            </div>
+        </div>
+    </header>
 
-    function filterBooks() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const filtered = books.filter(book =>
-        book.title.toLowerCase().includes(query) ||
-        book.author.toLowerCase().includes(query)
-      );
-      renderBooks(filtered);
-    }
+    <main>
+        <!-- Hero Section -->
+        <section class="bg-gray-900 py-16 sm:py-24 border-b border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center">
+                
+                <!-- Text Content -->
+                <div class="lg:w-1/2 lg:pr-12 mb-10 lg:mb-0 text-center lg:text-left">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+                        Unlock Worlds of Knowledge with <span class="text-primary">Great Stories & E-Books</span>
+                    </h1>
+                    <p class="mt-4 text-xl text-gray-300">
+                        Dive into millions of titles, from fiction blockbusters to expert non-fiction guides.
+                    </p>
+                    <div class="mt-8 flex justify-center lg:justify-start space-x-4">
+                        <button class="bg-primary hover-primary text-white font-bold py-3 px-8 rounded-xl shadow-xl transition duration-300 transform hover:scale-105">
+                            Browse All Titles
+                        </button>
+                        <button class="bg-gray-800 border-2 border-primary text-primary font-bold py-3 px-8 rounded-xl shadow-md transition duration-300 hover:bg-gray-700">
+                            Start Your Free Trial
+                        </button>
+                    </div>
+                </div>
 
-    // Initial load
-    renderBooks(books);
-  </script>
+                <!-- Image Placeholder (Illustrative) -->
+                <div class="lg:w-1/2">
+                    <img src="https://placehold.co/600x400/1e293b/f59e0b?text=Digital+Library" alt="Digital Book Illustration" class="rounded-2xl shadow-2xl w-full border border-gray-700">
+                </div>
+            </div>
+        </section>
+
+        <!-- Book Cards Section -->
+        <section id="books" class="py-16 sm:py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-white text-center mb-12">Bestselling Titles</h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    
+                    <!-- Book Card 1: Thriller -->
+                    <div class="card-bg rounded-xl overflow-hidden book-card-shadow hover:shadow-2xl transition duration-300 cursor-pointer">
+                        <img src="https://placehold.co/400x250/ef4444/ffffff?text=Mystery+Book+Cover" alt="Mystery Book Cover" class="w-full h-40 object-cover">
+                        <div class="p-5">
+                            <h3 class="text-xl font-semibold text-white truncate hover:text-primary transition duration-150">The Midnight Code: A Detective Thriller</h3>
+                            <p class="text-sm text-gray-400 mt-1">By Alice K. Martin (Mystery)</p>
+                            <div class="flex items-center mt-3 justify-between">
+                                <span class="text-primary font-bold mr-2 text-sm">4.8/5 Stars</span>
+                                <span class="text-lg font-bold text-white">$12.99</span>
+                            </div>
+                            <span class="block mt-4 text-lg font-bold text-white">View Details &rarr;</span>
+                        </div>
+                    </div>
+
+                    <!-- Book Card 2: Fantasy -->
+                    <div class="card-bg rounded-xl overflow-hidden book-card-shadow hover:shadow-2xl transition duration-300 cursor-pointer">
+                        <img src="https://placehold.co/400x250/3b82f6/ffffff?text=Fantasy+Book+Cover" alt="Fantasy Book Cover" class="w-full h-40 object-cover">
+                        <div class="p-5">
+                            <h3 class="text-xl font-semibold text-white truncate hover:text-primary transition duration-150">Chronicles of Aerthos: The Lost King</h3>
+                            <p class="text-sm text-gray-400 mt-1">By R. L. Harrison (Fantasy)</p>
+                            <div class="flex items-center mt-3 justify-between">
+                                <span class="text-primary font-bold mr-2 text-sm">New Release</span>
+                                <span class="text-lg font-bold text-white">$15.50</span>
+                            </div>
+                            <span class="block mt-4 text-lg font-bold text-white">View Details &rarr;</span>
+                        </div>
+                    </div>
+
+                    <!-- Book Card 3: Self-Help -->
+                    <div class="card-bg rounded-xl overflow-hidden book-card-shadow hover:shadow-2xl transition duration-300 cursor-pointer">
+                        <img src="https://placehold.co/400x250/34d399/ffffff?text=Self-Help+Book+Cover" alt="Self-Help Book Cover" class="w-full h-40 object-cover">
+                        <div class="p-5">
+                            <h3 class="text-xl font-semibold text-white truncate hover:text-primary transition duration-150">The Atomic Habit Builder: Focus & Productivity</h3>
+                            <p class="text-sm text-gray-400 mt-1">By Dr. Evelyn Reed (Non-Fiction)</p>
+                            <div class="flex items-center mt-3 justify-between">
+                                <span class="text-primary font-bold mr-2 text-sm">5.0/5 Stars</span>
+                                <span class="text-lg font-bold text-white">$9.99</span>
+                            </div>
+                            <span class="block mt-4 text-lg font-bold text-white">View Details &rarr;</span>
+                        </div>
+                    </div>
+
+                    <!-- Book Card 4: Historical Fiction -->
+                    <div class="card-bg rounded-xl overflow-hidden book-card-shadow hover:shadow-2xl transition duration-300 cursor-pointer">
+                        <img src="https://placehold.co/400x250/f59e0b/ffffff?text=Historical+Book+Cover" alt="Historical Book Cover" class="w-full h-40 object-cover">
+                        <div class="p-5">
+                            <h3 class="text-xl font-semibold text-white truncate hover:text-primary transition duration-150">The Empress's Shadow: A Tale of Ancient Rome</h3>
+                            <p class="text-sm text-gray-400 mt-1">By Thomas P. Wells (Historical Fiction)</p>
+                            <div class="flex items-center mt-3 justify-between">
+                                <span class="text-primary font-bold mr-2 text-sm">Popular</span>
+                                <span class="text-lg font-bold text-white">$10.49</span>
+                            </div>
+                            <span class="block mt-4 text-lg font-bold text-white">View Details &rarr;</span>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="#books" class="inline-block bg-primary hover-primary text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition duration-300">
+                        Explore More Genres
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 text-white">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-primary">BookStream</h3>
+                    <p class="text-sm text-gray-400">Read. Learn. Escape.</p>
+                </div>
+                
+                <!-- Links 1 -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">Company</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-primary transition duration-150">About Us</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Careers</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Links 2 -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">Resources</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-primary transition duration-150">Support</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Gift Cards</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Terms</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Privacy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links 3: Authors/Publishers -->
+                <div class="col-span-2 md:col-span-1">
+                    <h4 class="text-lg font-semibold mb-4 text-white">Community</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-primary transition duration-150">Become an Author</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Publisher Portal</a></li>
+                        <li><a href="#" class="hover:text-primary transition duration-150">Book Clubs</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social/App -->
+                <div class="md:col-span-1">
+                    <h4 class="text-lg font-semibold mb-4 text-white">Get the App</h4>
+                    <img src="https://placehold.co/120x40/4b5563/f59e0b?text=App+Store" alt="App Store Badge" class="rounded-lg mb-2 cursor-pointer">
+                    <img src="https://placehold.co/120x40/4b5563/f59e0b?text=Google+Play" alt="Google Play Badge" class="rounded-lg cursor-pointer">
+                </div>
+            </div>
+            
+            <div class="mt-12 border-t border-gray-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-sm text-gray-400">&copy; 2024 BookStream, Inc. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 sm:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-primary transition duration-150">
+                        <!-- Facebook Icon Placeholder -->
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.372 0 0 5.372 0 12c0 5.099 3.725 9.358 8.618 10.37V14.07h-2.583V10.37H8.618v-2.77c0-2.556 1.547-3.956 3.844-3.956 1.109 0 2.052.099 2.33.143v2.66h-1.666c-1.31 0-1.57.624-1.57 1.545v1.94h3.292l-.527 3.7H11.55v8.308C16.442 21.358 20 17.099 20 12c0-6.628-5.372-12-12-12z"/></svg>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition duration-150">
+                        <!-- Twitter Icon Placeholder -->
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.25 6.13c-.62.27-1.28.45-1.97.53.7-.42 1.24-1.09 1.49-1.88-.66.39-1.39.68-2.16.83-.62-.66-1.51-1.07-2.49-1.07-1.88 0-3.41 1.53-3.41 3.41 0 .27.03.54.08.79-2.83-.14-5.34-1.5-7.02-3.56-.29.5-.45 1.09-.45 1.71 0 1.18.6 2.22 1.51 2.83-.55-.02-1.06-.17-1.51-.41v.04c0 1.66 1.18 3.05 2.76 3.37-.28.08-.58.13-.88.13-.22 0-.44-.02-.65-.06.44 1.37 1.71 2.36 3.22 2.39-1.16.91-2.62 1.45-4.22 1.45-.27 0-.54-.02-.8-.05 1.5 1.02 3.29 1.62 5.21 1.62 6.25 0 9.66-5.18 9.66-9.66 0-.15-.01-.3-.02-.45.66-.48 1.23-1.08 1.68-1.76z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript for Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
+
 </body>
-</html>
+                                                                                               </html>
