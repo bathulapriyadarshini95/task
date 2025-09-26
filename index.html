@@ -1,0 +1,180 @@
+# task<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Online Learning Books</title>
+  <style>
+    /* CSS styles */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background-color: #004aad;
+      color: white;
+      padding: 1.2rem 2rem;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+    }
+    main {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .search-bar {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .search-bar input[type="text"] {
+      width: 80%;
+      max-width: 400px;
+      padding: 0.7rem 1rem;
+      font-size: 1rem;
+      border: 2px solid #004aad;
+      border-radius: 5px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .search-bar input[type="text"]:focus {
+      border-color: #0073e6;
+    }
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    .book-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s;
+    }
+    .book-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    }
+    .book-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #004aad;
+    }
+    .book-author {
+      font-size: 1rem;
+      font-style: italic;
+      margin-bottom: 1rem;
+      color: #555;
+    }
+    .book-description {
+      flex-grow: 1;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: #666;
+    }
+
+    @media (max-width: 500px) {
+      .search-bar input[type="text"] {
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>Online Learning Platform - Books</header>
+  <main>
+    <div class="search-bar">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search books by title or author..."
+        onkeyup="filterBooks()"
+      />
+    </div>
+    <div class="book-grid" id="bookGrid">
+      <!-- Books render here -->
+    </div>
+  </main>
+
+  <script>
+    // JavaScript code
+
+    const books = [
+      {
+        title: "Introduction to Algorithms",
+        author: "Thomas H. Cormen",
+        description: "A comprehensive textbook on algorithms and data structures, widely used in computer science education."
+      },
+      {
+        title: "Clean Code",
+        author: "Robert C. Martin",
+        description: "A handbook of agile software craftsmanship that emphasizes writing clean, readable, and maintainable code."
+      },
+      {
+        title: "Learning Python",
+        author: "Mark Lutz",
+        description: "An in-depth introduction to the core Python language and its libraries."
+      },
+      {
+        title: "Artificial Intelligence: A Modern Approach",
+        author: "Stuart Russell & Peter Norvig",
+        description: "The leading textbook on artificial intelligence, covering theory and practical applications."
+      },
+      {
+        title: "Effective Java",
+        author: "Joshua Bloch",
+        description: "Best practices and design patterns for writing efficient and maintainable Java code."
+      },
+      {
+        title: "The Pragmatic Programmer",
+        author: "Andrew Hunt and David Thomas",
+        description: "Tips and techniques for improving software development craftsmanship and career."
+      }
+    ];
+
+    function renderBooks(bookList) {
+      const bookGrid = document.getElementById('bookGrid');
+      bookGrid.innerHTML = '';
+
+      if (bookList.length === 0) {
+        bookGrid.innerHTML = '<p>No books found.</p>';
+        return;
+      }
+
+      bookList.forEach(book => {
+        const card = document.createElement('div');
+        card.className = 'book-card';
+        card.innerHTML = `
+          <div class="book-title">${book.title}</div>
+          <div class="book-author">by ${book.author}</div>
+          <div class="book-description">${book.description}</div>
+        `;
+        bookGrid.appendChild(card);
+      });
+    }
+
+    function filterBooks() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = books.filter(book =>
+        book.title.toLowerCase().includes(query) ||
+        book.author.toLowerCase().includes(query)
+      );
+      renderBooks(filtered);
+    }
+
+    // Initial load
+    renderBooks(books);
+  </script>
+</body>
+</html>
